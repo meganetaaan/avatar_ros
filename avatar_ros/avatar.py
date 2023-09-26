@@ -145,7 +145,6 @@ class FaceRenderer:
     def draw_mouth(self, cx: int, cy: int, minWidth: int, maxWidth: int,
                    minHeight: int, maxHeight: int,
                    mouth_context: Dict[str, float]) -> None:
-        # ウィンドウ中央とスケーリングを考慮
         scale = min(self.scale_x, self.scale_y)
         cx = self.cx + (cx - 160) * scale
         cy = self.cy + (cy - 120) * scale
@@ -190,8 +189,7 @@ class FaceRenderer:
         self.move_face(dy)
 
 
-# Sample context
-sample_context = {
+default_context = {
     'mouth': {'open': 0.0},
     'eyes': {
         'left': {'gazeX': 0.0, 'gazeY': 0.0, 'open': 1.0},
@@ -209,7 +207,7 @@ class AvatarFace():
         self.canvas = canvas = Canvas(root, width=320, height=240, bg='black')
         self.canvas.pack(fill=BOTH, expand=YES)
         self.face_renderer = face_renderer = FaceRenderer(
-            canvas, sample_context)
+            canvas, default_context)
         self.running = False
         self.is_closed = False
         blink_modifier = BlinkModifier(
@@ -234,8 +232,6 @@ class AvatarFace():
         w, h = event.width, event.height
         self.face_renderer.set_origin(w // 2, h // 2)
         self.face_renderer.set_scale(w / 320, h / 240)
-
-        # self.canvas.create_rectangle()
 
     def set_mouth_open(self, open):
         if open < 0 or math.isnan(open):

@@ -3,7 +3,7 @@ from rclpy.node import Node
 from tkinter import Tk
 from std_msgs.msg import Float32
 
-from .avatar import AvatarFace  # 適切なインポートに変更してください
+from .avatar import AvatarFace
 
 INTERVAL = 30
 
@@ -12,11 +12,9 @@ class AvatarNode(Node):
     def __init__(self):
         super().__init__('avatar')
 
-        # Tkinterのセットアップ
         self.root = Tk()
         self.avatar = AvatarFace(self.root)
 
-        # ROS2のサブスクリプション
         self.mouth_subscription = self.create_subscription(
             Float32,
             'mouth',
@@ -24,9 +22,8 @@ class AvatarNode(Node):
             10
         )
 
-        # ROS2のタイマーでTkinterのイベントループを定期的に更新
         self.timer = self.create_timer(
-            INTERVAL / 1000, self.update)  # 10msごとに更新
+            INTERVAL / 1000, self.update) 
 
     def callback_mouth(self, msg):
         self.get_logger().info('Received mouth data: %f' % msg.data)
